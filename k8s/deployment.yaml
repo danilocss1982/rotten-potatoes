@@ -7,21 +7,21 @@ spec:
   selector:
     matchLabels:
       app: mongodb
-  template: 
+  template:
     metadata:
       labels:
         app: mongodb
     spec:
       containers:
-      - name: mongodb
-        image: mongo:4.4.6
-        ports:
-          - containerPort: 27017
-        env: # Variaveis de ambiente
-          - name: MONGO_INITDB_ROOT_USERNAME
-            value: mongouser
-          - name: MONGO_INITDB_ROOT_PASSWORD
-            value: mongopwd
+        - name: mongodb
+          image: mongo:4.4.6
+          ports:
+            - containerPort: 27017
+          env: # Variaveis de ambiente
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: mongouser
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value: mongopwd
 ---
 # Deployment do Service Mongo DB
 apiVersion: v1
@@ -32,7 +32,7 @@ spec:
   selector:
     app: mongodb
   ports:
-  - port: 27017
+    - port: 27017
   type: ClusterIP
 
 ---
@@ -49,23 +49,23 @@ spec:
     metadata:
       labels:
         app: web
-    spec:  
+    spec:
       containers:
-      - name: web
-        image: danilocss/rotten-potatoes:v2
-        ports:
-        - containerPort: 5000
-        env:
-        - name: MONGODB_DB
-          value: admin
-        - name: MONGODB_HOST
-          value: mongodb
-        - name: MONGODB_PORT
-          value: "27017"
-        - name: MONGODB_USERNAME
-          value: mongouser
-        - name: MONGODB_PASSWORD
-          value: mongopwd
+        - name: web
+          image: danilocss/rotten-potatoes:v2
+          ports:
+            - containerPort: 5000
+          env:
+            - name: MONGODB_DB
+              value: admin
+            - name: MONGODB_HOST
+              value: mongodb
+            - name: MONGODB_PORT
+              value: "27017"
+            - name: MONGODB_USERNAME
+              value: mongouser
+            - name: MONGODB_PASSWORD
+              value: mongopwd
 
 ---
 # Deployment do Service da aplicação web rotten potatoes
@@ -77,9 +77,9 @@ spec:
   selector:
     app: web
   ports:
-  - port: 80
-    # Porta de destino do Pod para o container
-    targetPort: 5000
-    # Porta local para acessar atraves do k3d
-    nodePort: 30000
-  type: NodePort
+    - port: 80
+      # Porta de destino do Pod para o container
+      targetPort: 5000
+      # Porta local para acessar atraves do k3d
+      nodePort: 30000
+  type: LoadBalancer
